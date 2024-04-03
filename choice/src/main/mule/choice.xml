@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="94af204b-49e4-4678-a4a7-bc9614fa6061" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="choiceFlow" doc:id="af6ad218-9480-4057-81a9-661ec2532501" >
+		<http:listener doc:name="Listener" doc:id="d6441635-0399-47c6-8a92-43627eacd3e1" config-ref="HTTP_Listener_config" path="/choice"/>
+		<logger level="INFO" doc:name="set flow" doc:id="8901c5b7-9cd4-4980-b464-b6f3d52906ea" message="#[payload]"/>
+		<set-variable value="500" doc:name="Set Variable" doc:id="1e12bb7f-e370-4093-9288-34dbece14aec" variableName="amount"/>
+		<choice doc:name="Choice" doc:id="418b12b5-2c78-4a79-a219-b374db00962d" >
+			<when expression="#[payload.vars.amount]">
+				<ee:transform doc:name="Transform Message" doc:id="720c1e72-11ac-46a1-a812-004559f44b5e" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+ "amount" : 300	
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</when>
+			<otherwise >
+				<ee:transform doc:name="Transform Message" doc:id="e6ac3432-6fb8-4b99-86d6-80653289663e" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"message" : "order placed successfully"
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</otherwise>
+		</choice>
+		<logger level="INFO" doc:name="Logger" doc:id="08862b07-1a16-4568-9d0e-f8c9ad22dad0" message="flow ends"/>
+	</flow>
+</mule>
