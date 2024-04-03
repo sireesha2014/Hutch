@@ -1,0 +1,14 @@
+#%RAML 1.0
+title: calsi
+version: v1
+protocols: [HTTP,HTTPS]
+mediaType: [application/json] 
+/addition:
+  get:
+    responses:
+      200:
+        body:
+            example:
+              {
+                "result": "addition is 10"
+              }
