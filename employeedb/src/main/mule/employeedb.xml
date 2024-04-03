@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="8a6f1d4a-35bb-4281-acff-825d4b81b0ad" >
+		<http:listener-connection host="0.0.0.0" port="8084" />
+	</http:listener-config>
+	<flow name="employeedbFlow" doc:id="8ad74d09-4db1-4f9e-8012-ad0ff50359a0" >
+		<http:listener doc:name="Listener" doc:id="4a23c79b-ab4e-4bbd-a4e3-84e63a0621eb" config-ref="HTTP_Listener_config" path="/employeedb"/>
+		<ee:transform doc:name="Transform Message" doc:id="7e7c2c13-7730-4307-8d03-25b2b6aa60e9" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+1 to 2 map[
+{
+	id : 200 + $$,
+	name : "ram",
+	number : 1234567899,
+	lname : "kumar"
+},
+3 to 5 map
+{
+	id : 200 + $$,
+	name : "ramu",
+	number : 1234567879,
+	lname : "kumari"
+},
+6 to 8 map
+{
+	id : 200 + $$,
+	name : "sam",
+	number : 1234467899,
+	lname : "sukumar"
+},
+9 to 11 map
+{
+	id : 200 + $$,
+	name : "bam",
+	number : 3334567899,
+	lname : "sundar"
+},
+12 to 14 map
+{
+	id : 200 + $$,
+	name : "prem",
+	number : 1234566899,
+	lname : "kumar"
+},
+15 to 17 map
+{
+	id : 200 + $$,
+	name : "kalam",
+	number : 1288567899,
+	lname : "kumar"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<foreach doc:name="For Each" doc:id="b8074240-4b0f-449f-b224-340252f5d726" >
+			<logger level="INFO" doc:name="Logger" doc:id="023a16a0-925b-4b8d-8b56-fe12f6886177" message="#[payload]"/>
+			<db:insert doc:name="Insert" doc:id="08ee25b7-699f-4677-b80f-c6eba1913078" >
+				<db:sql ><![CDATA[INSERT INTO employee (id, name, number, lname)
+VALUES (:id, :name, :number, :lname);]]></db:sql>
+				<db:input-parameters ><![CDATA[#[payload]]]></db:input-parameters>
+			</db:insert>
+		</foreach>
+	</flow>
+</mule>
