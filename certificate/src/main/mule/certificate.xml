@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:vm="http://www.mulesoft.org/schema/mule/vm" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd">
+	<vm:config name="VM_Config" doc:name="VM Config" doc:id="7afa921f-c69d-4299-8305-402dcd53b01d" >
+		<vm:queues >
+			<vm:queue queueName="myq" />
+		</vm:queues>
+	</vm:config>
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="2138cd56-2a96-498b-8db8-a5fbd47f8dc7" >
+		<http:listener-connection host="0.0.0.0" port="8082" />
+	</http:listener-config>
+	<flow name="certificateFlow" doc:id="4b8b5e57-fa3f-4534-bea6-4eb5027c6dfd" >
+		<http:listener doc:name="Listener" doc:id="4d984f9c-e553-4216-8d3e-988a5c9d00ee" config-ref="HTTP_Listener_config" path="hi"/>
+		<vm:publish doc:name="Publish" doc:id="9063816d-c67c-4e77-9b6d-fe5ab7da1e42" config-ref="VM_Config" queueName="myq"/>
+		<logger level="INFO" doc:name="Logger" doc:id="611570a0-f4c8-48f7-a7ed-699bfc8e4a91" message="#[payload]"/>
+	</flow>
+	<flow name="certificateFlow2" doc:id="dac220ee-7349-4721-95e9-6d6a80d1e4ba" >
+		<http:listener doc:name="Listener" doc:id="19ad3374-3cab-4c38-95d4-c5b135d403ae" config-ref="HTTP_Listener_config" path="consume"/>
+		<vm:consume queueName="myq" doc:name="Consume" doc:id="6d7e688c-b442-43a1-8ef6-0624b1b9f720" config-ref="VM_Config" timeout="15"/>
+		<logger level="INFO" doc:name="Logger" doc:id="a5527134-a1c2-45e3-a3a4-84ea5e508d90" message="#[payload]"/>
+	</flow>
+	<flow name="certificateFlow1" doc:id="f9c48b4d-0f23-41ed-bc6f-e6afa0ee6650" initialState="stopped">
+		<vm:listener queueName="myq" doc:name="Listener" doc:id="6ab76d63-8d1b-48d8-ace3-c8fc97fcb4eb" config-ref="VM_Config"/>
+		<logger level="INFO" doc:name="Logger" doc:id="5bf74309-9e76-413a-af95-94289fb5d598" message="#[payload]"/>
+	</flow>
+</mule>
