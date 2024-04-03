@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="fdd8e7b1-cb8e-44ac-89a2-9753fb8174e1" >
+		<http:listener-connection host="localhost" port="8098" />
+	</http:listener-config>
+	<flow name="flowFlow" doc:id="1352e2e9-1718-40e6-a15a-39536e908b40" >
+		<http:listener doc:name="Listener" doc:id="92bbb32a-fa2e-4370-ac6c-de2d3bafc766" config-ref="HTTP_Listener_config" path="/flow"/>
+		<logger level="INFO" doc:name="Logger" doc:id="05365c3d-1c1c-4df3-ab10-b2b836ee7407" message="Hey this is sample flow"/>
+		<flow-ref doc:name="calling sub flow" doc:id="6b8904c2-2663-4884-8ee6-26422298e989" name="Sub_Flow"/>
+		<flow-ref doc:name="calling private flow" doc:id="60760cf2-89df-4c52-904a-bf7e1c9b6b36" name="PrivateFlow"/>
+		<ee:transform doc:name="Transform Message" doc:id="84445906-d3e8-4e31-93a8-c6a83fd6ad10" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

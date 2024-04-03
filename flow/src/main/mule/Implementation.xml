@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<sub-flow name="Sub_Flow" doc:id="5ea01c42-5ec0-4b46-82b8-09c471e57b00" >
+		<logger level="INFO" doc:name="Logger" doc:id="e2692567-3e5b-4755-807c-924bf9ac512a" message="This is subflow"/>
+	</sub-flow>
+	<flow name="PrivateFlow" doc:id="2f31fb8d-82bd-46c2-8c07-afe290a41294" >
+		<logger level="INFO" doc:name="Logger" doc:id="79bf2848-f1e1-449b-86b5-7a48c7d19a10" message="This is private flow"/>
+	</flow>
+</mule>
